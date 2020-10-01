@@ -44,12 +44,15 @@ int main()
             case 2:
             {
                 int a = 0;
-                std::cout << "Enter number a (random will be from -a to a): " << std::endl;
+                int b = 0;
+                std::cout << "Enter number a (lower border of a random): " << std::endl;
                 std::cin >> a;
+                std::cout << "Enter number b (upper border of a random): " << std::endl;
+                std::cin >> b;
                 std::cout << "These elements: ";
                 for (int i = 0; i < n; ++i)
                 {
-                    arr[i] = rand() % (2*a) - a;
+                    arr[i] = rand() % (b - a) + a;
                     std::cout << arr[i] << " ";
                 }
                 std::cout << std::endl;
