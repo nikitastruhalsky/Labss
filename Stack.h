@@ -1,26 +1,29 @@
 #ifndef LAB_8_STACK_STACK_H
 #define LAB_8_STACK_STACK_H
 
+#define SIZE 100
+
+template<typename T>
 class Stack
 {
 private:
-    double *arr;
+    std::string *arr;
     int capacity;
     int top;
 
 public:
-    Stack(int size);
+    Stack(int size = SIZE);
     ~Stack();
 
-    void push(double element);
-    double pop();
-    double peek();
+    void push(const std::string& element);
+    std::string pop();
+    std::string peek();
 
     int size();
     bool IsEmpty();
     bool IsFull();
 
-    double &operator [] (int n);
+    std::string &operator [] (int n);
     bool operator == (const Stack &st2);
     bool operator != (const Stack &st2);
     bool operator < (const Stack &st2);

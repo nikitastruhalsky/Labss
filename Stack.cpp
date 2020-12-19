@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Stack.h"
 
-
-double& Stack::operator [] (int n)
+template<typename T>
+std::string & Stack<T>::operator [] (int n)
 {
     if (n < 0 || n >= size())
     {
@@ -12,7 +12,8 @@ double& Stack::operator [] (int n)
     return arr[n];
 }
 
-bool Stack::operator == (const Stack &st2)
+template<typename T>
+bool Stack<T>::operator == (const Stack &st2)
 {
     for (int i = 0; i < size(); ++i)
     {
@@ -28,7 +29,8 @@ bool Stack::operator == (const Stack &st2)
     return true;
 }
 
-bool Stack::operator != (const Stack &st2)
+template<typename T>
+bool Stack<T>::operator != (const Stack &st2)
 {
     for (int i = 0; i < size(); ++i)
     {
@@ -44,7 +46,8 @@ bool Stack::operator != (const Stack &st2)
     return false;
 }
 
-bool Stack::operator < (const Stack &st2)
+template<typename T>
+bool Stack<T>::operator < (const Stack &st2)
 {
     double sum1 = 0, sum2 = 0;
     for (int i = 0; i < size(); ++i)
@@ -62,7 +65,8 @@ bool Stack::operator < (const Stack &st2)
     }
 }
 
-bool Stack::operator > (const Stack &st2)
+template<typename T>
+bool Stack<T>::operator > (const Stack &st2)
 {
     double sum1 = 0, sum2 = 0;
     for (int i = 0; i < size(); ++i)
@@ -80,19 +84,22 @@ bool Stack::operator > (const Stack &st2)
     }
 }
 
-void Stack::operator << (double number)
+template<typename T>
+void Stack<T>::operator << (double number)
 {
     this -> push(number);
 }
 
-double Stack::operator >> (double &number)
+template<typename T>
+double Stack<T>::operator >> (double &number)
 {
     number = peek();
     this -> pop();
     return number;
 }
 
-Stack& Stack::operator = (const Stack &massive)
+template<typename T>
+Stack<T>& Stack<T>::operator = (const Stack &massive)
 {
     this -> capacity = massive.capacity;
     for (int i = 0; i < massive.capacity; ++i)
@@ -102,19 +109,22 @@ Stack& Stack::operator = (const Stack &massive)
     return *this;
 }
 
-Stack::Stack(int size)
+template<typename T>
+Stack<T>::Stack(int size)
 {
-    arr = new double[size];
+    arr = new std::string[size];
     capacity = size;
     top = -1;
 }
 
-Stack::~Stack()
+template<typename T>
+Stack<T>::~Stack()
 {
     delete[] arr;
 }
 
-void Stack::push(double element)
+template<typename T>
+void Stack<T>::push(const std::string& element)
 {
     if (IsFull())
     {
@@ -123,12 +133,12 @@ void Stack::push(double element)
     }
     else
     {
-        std::cout << "Push " << element << std::endl;
         arr[++top] = element;
     }
 }
 
-double Stack::pop()
+template<typename T>
+std::string Stack<T>::pop()
 {
     if (IsEmpty())
     {
@@ -137,12 +147,12 @@ double Stack::pop()
     }
     else
     {
-        std::cout << "Pop " << peek() << std::endl;
         return arr[top--];
     }
 }
 
-double Stack::peek()
+template<typename T>
+std::string Stack<T>::peek()
 {
     if (IsEmpty())
     {
@@ -151,23 +161,25 @@ double Stack::peek()
     }
     else
     {
-        std::cout << arr[top];
+        //std::cout << arr[top];
         return arr[top];
     }
 }
 
-bool Stack::IsEmpty()
+template<typename T>
+bool Stack<T>::IsEmpty()
 {
     return top == -1;
 }
 
-bool Stack::IsFull()
+template<typename T>
+bool Stack<T>::IsFull()
 {
     return top == capacity - 1;
 }
 
-int Stack::size()
+template<typename T>
+int Stack<T>::size()
 {
     return top + 1;
 }
-
