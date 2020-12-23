@@ -19,6 +19,7 @@ public:
     int *setmarks2(const int *valueSecondSession);
     friend std::ostream& operator << (std::ostream& out, StudentAfterSecondSession&);
     double AverageMark() override;
+    int GetSession() override;
 };
 
 

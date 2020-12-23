@@ -17,6 +17,7 @@ protected:
     char *name;
     int course;
     int group;
+    int session;
 public:
     Student (char *name1, int ncourse, int ngroup);
     Student (const Student &);
@@ -25,6 +26,7 @@ public:
     int GetGroup();
     int GetIdentificator();
     int GetRecordBookNumber();
+    virtual int GetSession();
     void SetName(char *valueName);
     void SetCourse(int course);
     void SetGroup(int group);

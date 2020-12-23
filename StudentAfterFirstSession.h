@@ -18,6 +18,7 @@ public:
     friend std::ostream& operator << (std::ostream& out, StudentAfterFirstSession&);
     double AverageMark() override;
     int *GetMarks1();
+    int GetSession() override;
 };
 
 

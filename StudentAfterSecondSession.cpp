@@ -73,3 +73,8 @@ double StudentAfterSecondSession::AverageMark()
     std::cout << "The average mark after 2 session is: " << average_mark << std::endl;
     return average_mark;
 }
+
+int StudentAfterSecondSession::GetSession()
+{
+    return 2;
+}

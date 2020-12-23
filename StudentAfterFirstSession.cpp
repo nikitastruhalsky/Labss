@@ -62,3 +62,8 @@ int* StudentAfterFirstSession::GetMarks1()
 {
     return marks1;
 }
+
+int StudentAfterFirstSession::GetSession()
+{
+    return 1;
+}
