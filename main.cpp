@@ -7,13 +7,22 @@
 
 double AverageMarkForAllStudents(std::vector<Student*> students)
 {
-    double sum=0;
+    double sum = 0;
     for (auto& person : students)
     {
         sum += person -> AverageMark();
     }
-    return (double)sum / students.size();
+    int count = 0;
+    for (auto & student : students)
+    {
+        if (student -> AverageMark() != 0)
+        {
+            count++;
+        }
+    }
+    return (double)sum / count;
 }
+
 double AverageMarkForAGroup(std::vector<Student*> students, int course, int group, int session)
 {
     double sum = 0;

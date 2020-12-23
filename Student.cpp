@@ -109,6 +109,5 @@ double Student::AverageMark()
 
 int Student::GetSession()
 {
-    return 0
-;
+    return 0;
 }
