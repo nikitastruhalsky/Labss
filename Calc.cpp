@@ -50,7 +50,7 @@ bool Calculator::NumberOfBrackets(const std::vector<std::string>& line)
 
 bool Calculator::CorrectWord(const std::vector<std::string>& v)
 {
-    for (int i = 8; i < v.size(); ++i)
+    for (int i = 0; i < v.size(); ++i)
     {
         std::string word = v[i];
         if ((isdigit(*word.begin())) || ((*word.begin() == '-') && (isdigit(*(word.end() - 1)))))
