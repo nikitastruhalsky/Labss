@@ -4,12 +4,13 @@
 #include <vector>
 #include <functional>
 
+template<typename T>
 class Model
 {
 public:
-    std::vector<std::function<void(Model*)>*> subscribers;
+    std::vector<std::function<void(Model<T>*)>*> subscribers;
 
-    void subscribe(std::function<void(Model*)>* sub)
+    void subscribe(std::function<void(Model<T>*)>* sub)
     {
         subscribers.push_back(sub);
     }
@@ -23,31 +24,36 @@ public:
     }
 };
 
-class BusModel : public Model
+class Bus
 {
 public:
     int number;
     std::string color;
     std::string size;
-    std::vector<BusModel> buses;
 
-    BusModel()
+    Bus()
     {
         number = 0;
         color = "";
         size = "";
     }
 
-    BusModel(int _number, std::string _color, std::string _size)
+    Bus(int _number, std::string _color, std::string _size)
     {
         number = _number;
         color = _color;
         size = _size;
     }
+};
 
-    void AddBus(BusModel& busModel)
+class BusModel : public Model<Bus>
+{
+public:
+    std::vector<Bus> buses;
+
+    void AddBus(Bus& bus)
     {
-        buses.push_back(busModel);
+        buses.push_back(bus);
         notify();
     }
 
@@ -64,21 +70,27 @@ public:
     }
 };
 
-class StreetModel : public Model
+class Street
 {
 public:
     std::string streetName;
     int streetNumber;
-    std::vector<StreetModel> streets;
-    StreetModel(std::string& _name, int _streetNumber)
+
+    Street(std::string& _name, int _streetNumber)
     {
         streetName = _name;
         streetNumber = _streetNumber;
     }
+};
 
-    void AddStreet(StreetModel& streetModel)
+class StreetModel : public Model<Street>
+{
+public:
+    std::vector<Street> streets;
+
+    void AddStreet(Street& street)
     {
-        streets.push_back(streetModel);
+        streets.push_back(street);
         notify();
     }
 
@@ -95,28 +107,33 @@ public:
     }
 };
 
-class RouteModel : public Model
+class Route
 {
 public:
-    BusModel bus;
-    std::vector<StreetModel> routeStreets;
-    std::map<int, std::vector<StreetModel>> routes;
+    Bus bus;
+    std::vector<Street> routeStreets;
 
-    RouteModel(BusModel& _bus, std::vector<StreetModel>& _routeStreets)
+    Route(Bus& _bus, std::vector<Street>& _routeStreets)
     {
         bus = _bus;
         routeStreets = _routeStreets;
     }
+};
 
-    void AddRoute(RouteModel& routeModel)
+class RouteModel : public Model<Route>
+{
+public:
+    std::map<int, std::vector<Street>> routes;
+
+    void AddRoute(Route& route)
     {
-        routes[routeModel.bus.number] = routeModel.routeStreets;
+        routes[route.bus.number] = route.routeStreets;
         notify();
     }
 
-    void RemoveRoute(BusModel& busModel)
+    void RemoveRoute(Bus& bus)
     {
-        routes.erase(busModel.number);
+        routes.erase(bus.number);
         notify();
     }
 };
@@ -127,7 +144,7 @@ public:
     BusModel busModel;
     BusController(BusModel& _busModel): busModel(_busModel){};
 
-    void AddBus(BusModel bus)
+    void AddBus(Bus bus)
     {
         busModel.AddBus(bus);
     }
@@ -144,7 +161,7 @@ public:
     StreetModel streetModel;
     StreetController(StreetModel& _streetModel): streetModel(_streetModel){};
 
-    void AddStreet(StreetModel& street)
+    void AddStreet(Street street)
     {
         streetModel.AddStreet(street);
     }
@@ -161,12 +178,12 @@ public:
     RouteModel routeModel;
     RouteController(RouteModel& _routeModel): routeModel(_routeModel){};
 
-    void AddRoute(RouteModel route)
+    void AddRoute(Route route)
     {
         routeModel.AddRoute(route);
     }
 
-    void RemoveRoute(BusModel bus)
+    void RemoveRoute(Bus bus)
     {
         routeModel.RemoveRoute(bus);
     }
@@ -175,7 +192,7 @@ public:
 class BusView
 {
 private:
-    std::vector<BusModel> busModelAppearance;
+    std::vector<Bus> busModelAppearance;
     BusController& busController;
 public:
     void showData()
@@ -191,7 +208,7 @@ public:
         busModelAppearance = busModel -> buses;
     };
 
-    void AddBus(BusModel& bus)
+    void AddBus(Bus& bus)
     {
         busController.AddBus(bus);
     }
@@ -207,7 +224,7 @@ public:
 class StreetView
 {
 private:
-    std::vector<StreetModel> streetNameAppearance;
+    std::vector<Street> streetNameAppearance;
     StreetController& streetController;
 public:
     void showData()
@@ -223,7 +240,7 @@ public:
         streetNameAppearance = streetModel -> streets;
     };
 
-    void AddStreet(StreetModel& street)
+    void AddStreet(Street& street)
     {
         streetController.AddStreet(street);
     }
@@ -239,7 +256,7 @@ public:
 class RouteView
 {
 private:
-    std::map<int, std::vector<StreetModel>> routeAppearance;
+    std::map<int, std::vector<Street>> routeAppearance;
     RouteController& routeController;
 public:
     void showData()
@@ -257,17 +274,17 @@ public:
 
     std::function<void(RouteModel*)> updateView = [this](RouteModel* routeModel)
     {
-        routeAppearance = routeModel->routes;
+        routeAppearance = routeModel -> routes;
     };
 
-    void AddRoute(RouteModel& routeModel)
+    void AddRoute(Route& route)
     {
-        routeController.AddRoute(routeModel);
+        routeController.AddRoute(route);
     }
 
-    void RemoveRoute(BusModel& busNumber)
+    void RemoveRoute(Bus& bus)
     {
-        routeController.RemoveRoute(busNumber);
+        routeController.RemoveRoute(bus);
     }
 
     RouteView(RouteController& _routeController): routeController(_routeController){};
@@ -276,12 +293,12 @@ public:
 
 int main()
 {
+    Bus bus = Bus(11, "a", "b");
     BusModel busModel;
     BusController busController(busModel);
     BusView busView(busController);
 
-    BusModel busModel1 = BusModel(11, "a", "b");
-    busView.AddBus(busModel1);
+    busView.AddBus(bus);
     busModel.subscribe(&busView.updateView);
 
     busView.showData();
