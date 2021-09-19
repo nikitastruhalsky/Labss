@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-/*class Model
+class Model
 {
 public:
     std::vector<std::function<void(Model*)>*> subscribers;
@@ -21,26 +21,11 @@ public:
             sub -> operator()(this);
         }
     }
-};*/
+};
 
-class BusModel
+class BusModel : public Model
 {
 public:
-
-    std::vector<std::function<void(BusModel*)>*> subscribers;
-
-    void subscribe(std::function<void(BusModel*)>* sub)
-    {
-        subscribers.push_back(sub);
-    }
-
-    void notify()
-    {
-        for (auto sub: subscribers)
-        {
-            sub -> operator()(this);
-        }
-    }
     int number;
     std::string color;
     std::string size;
@@ -79,23 +64,9 @@ public:
     }
 };
 
-class StreetModel
+class StreetModel : public Model
 {
 public:
-    std::vector<std::function<void(StreetModel*)>*> subscribers;
-
-    void subscribe(std::function<void(StreetModel*)>* sub)
-    {
-        subscribers.push_back(sub);
-    }
-
-    void notify()
-    {
-        for (auto sub: subscribers)
-        {
-            sub -> operator()(this);
-        }
-    }
     std::string streetName;
     int streetNumber;
     std::vector<StreetModel> streets;
@@ -124,23 +95,9 @@ public:
     }
 };
 
-class RouteModel
+class RouteModel : public Model
 {
 public:
-    std::vector<std::function<void(RouteModel*)>*> subscribers;
-
-    void subscribe(std::function<void(RouteModel*)>* sub)
-    {
-        subscribers.push_back(sub);
-    }
-
-    void notify()
-    {
-        for (auto sub: subscribers)
-        {
-            sub -> operator()(this);
-        }
-    }
     BusModel bus;
     std::vector<StreetModel> routeStreets;
     std::map<int, std::vector<StreetModel>> routes;
