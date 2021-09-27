@@ -4,13 +4,12 @@
 #include <vector>
 #include <functional>
 
-template<typename T>
 class Model
 {
 public:
-    std::vector<std::function<void(Model<T>*)>*> subscribers;
+    std::vector<std::function<void(Model*)>*> subscribers;
 
-    void subscribe(std::function<void(Model<T>*)>* sub)
+    void subscribe(std::function<void(Model*)>* sub)
     {
         subscribers.push_back(sub);
     }
@@ -46,7 +45,7 @@ public:
     }
 };
 
-class BusModel : public Model<Bus>
+class BusModel : public Model
 {
 public:
     std::vector<Bus> buses;
@@ -83,7 +82,7 @@ public:
     }
 };
 
-class StreetModel : public Model<Street>
+class StreetModel : public Model
 {
 public:
     std::vector<Street> streets;
@@ -120,7 +119,7 @@ public:
     }
 };
 
-class RouteModel : public Model<Route>
+class RouteModel : public Model
 {
 public:
     std::map<int, std::vector<Street>> routes;
@@ -189,24 +188,39 @@ public:
     }
 };
 
-class BusView
+class View
+{
+public:
+    std::string modelAppearance;
+    std::function<void(Model*)> updateView = [this](Model* busModel)
+    {
+        modelAppearance += "foo";
+    };
+};
+
+class BusView : public View
 {
 private:
     std::vector<Bus> busModelAppearance;
     BusController& busController;
 public:
-    void showData()
+    BusView(BusController &controller) : busController(controller)
     {
-        for (auto & i : busModelAppearance)
+        controller.busModel.subscribe(&updateView);
+        for(auto x : busController.busModel.buses)
         {
-            std::cout << i.number << ' ' << i.color << ' '<< i.size << std::endl;
+            busModelAppearance.push_back(x);
         }
     }
 
-    std::function<void(BusModel*)> updateView = [this](BusModel* busModel)
+    void showData()
     {
-        busModelAppearance = busModel -> buses;
-    };
+        /*for (auto & i : busModelAppearance)
+        {
+            std::cout << i.number << ' ' << i.color << ' '<< i.size << std::endl;
+        }*/
+        std::cout << modelAppearance;
+    }
 
     void AddBus(Bus& bus)
     {
@@ -217,8 +231,6 @@ public:
     {
         busController.RemoveBus(busNumber);
     }
-
-    BusView(BusController& _busController): busController(_busController){};
 };
 
 class StreetView
@@ -299,7 +311,9 @@ int main()
     BusView busView(busController);
 
     busView.AddBus(bus);
-    busModel.subscribe(&busView.updateView);
+    busView.AddBus(bus);
+    busView.AddBus(bus);
+    busView.AddBus(bus);
 
     busView.showData();
     return 0;
